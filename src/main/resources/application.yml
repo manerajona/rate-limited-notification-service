@@ -1,18 +1,5 @@
 server.port: 8081
 
-# Circuit breaker for limiting notification rate
-com.modak:
-  circuitbreaker:
-    instances:
-      status:
-        durationInOpenState: 2m
-      news:
-        durationInOpenState: 1d
-      marketing:
-        durationInOpenState: 3h
-      default:
-        durationInOpenState: 1s
-
 logging:
   level:
     com.modak: debug

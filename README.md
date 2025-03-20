@@ -21,8 +21,8 @@ These are the libraries and frameworks this application uses.
 │   │   └── com
 │   │       └── modak
 │   │           └── notifications
+│   │               ├── aspects
 │   │               ├── common
-│   │               ├── config
 │   │               ├── core
 │   │               └── ports
 │   │                   ├── input

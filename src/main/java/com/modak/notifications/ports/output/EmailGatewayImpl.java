@@ -10,7 +10,7 @@ public class EmailGatewayImpl implements EmailGateway {
     private static final Logger log = LoggerFactory.getLogger(EmailGatewayImpl.class);
 
     @Override
-    public void send(String userId, String message) {
-        log.debug("sending message to user {}", userId);
+    public void send(String userId, String subject, String body) {
+        log.debug("Sending notification to user {}: {}", userId, body);
     }
 }

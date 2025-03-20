@@ -1,38 +1,32 @@
 package com.modak.notifications.ports.input;
 
+import com.modak.notifications.aspects.RateLimited;
 import com.modak.notifications.core.NotificationService;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
+import java.time.temporal.ChronoUnit;
 
 @Component
-public class NotificationEventConsumer implements ApplicationRunner {
+public class NotificationEventConsumer {
 
     private final NotificationService service;
-
-    public static final Set<NotificationEvent> events;
-
-    static {
-        events = Set.of(
-                new NotificationEvent("news", "user", "news 1"),
-                new NotificationEvent("news", "user", "news 2"),
-                new NotificationEvent("news", "user", "news 3"),
-                new NotificationEvent("news", "another user", "news 1"),
-                new NotificationEvent("update", "user", "update 1"),
-                new NotificationEvent("update", "user", "update 2"));
-    }
 
     public NotificationEventConsumer(NotificationService service) {
         this.service = service;
     }
 
-    @Override
-    public void run(ApplicationArguments args) throws InterruptedException {
-        for (NotificationEvent event : events) {
-            service.send(event.type(), event.userId(), event.message());
-            Thread.sleep(1000);
-        }
+    @RateLimited(key = "#userId", windowValue = 5, windowUnit = ChronoUnit.SECONDS)
+    public void statusNotificationEvent(String userId, NotificationEvent event) {
+        service.send(userId, event.type(), event.message());
+    }
+
+    @RateLimited(key = "#userId", windowValue = 6, windowUnit = ChronoUnit.HOURS)
+    public void marketingNotificationEvent(String userId, NotificationEvent event) {
+        service.send(userId, event.type(), event.message());
+    }
+
+    @RateLimited(key = "#userId", windowValue = 1, windowUnit = ChronoUnit.DAYS)
+    public void newsNotificationEvent(String userId, NotificationEvent event) {
+        service.send(userId, event.type(), event.message());
     }
 }
